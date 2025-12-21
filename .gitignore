@@ -1,0 +1,75 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Local model directories
+models/
+output/
+
+# SageMaker specific
+.sagemaker-uploading
+.sagemaker-uploaded
+
+# Environment variables
+.env
+
+# Streamlit
+.streamlit/
+
+# macOS
+.DS_Store
+
+# Local data files
+data/*.csv
+
+index/
+# RAG index artifacts (LlamaIndex persist)
+SRIJ_docs_index/
+notebooks/SRIJ_docs_index/
+notebooks/SRIJ_docs_index/**
