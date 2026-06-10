@@ -8,21 +8,25 @@ O objetivo do projeto foi construir um sistema agêntico de QA jurídico, robust
 *	Perguntas de lookup textual (ex.: “qual é a redação da alínea x) do artigo y.º”) são tratadas de forma determinística;
 *	Perguntas interpretativas ou temáticas continuam a funcionar corretamente.
 
+---
+
 ### 2. Visão geral da pipeline (end-to-end)
 
-A pipeline implementada segue um modelo agêntico com LangGraph, integrando LlamaIndex para retrieval e LlangSmith para observabilidade e um LLM apenas onde é estritamente necessário.
+A pipeline implementada segue um modelo agêntico com LangGraph, integrando LlamaIndex para retrieval e LangSmith para observabilidade e um LLM apenas onde é estritamente necessário.
 
 Fluxo de alto nível:
 
-*	Ingestão e preparação dos documentos;
-*	Indexação semântica + lexical;
-*	Domain gating;
-*	Decisão de retrieval;
-*	Retrieval determinístico ou híbrido;
-*	Classificação de relevância (chunk grading);
-*	Geração da resposta grounded;
-*	Reflexão e autocorreção;
-*	Resposta final ao utilizador.
+1.	Ingestão e preparação dos documentos;
+2.	Indexação semântica + lexical;
+3.	Domain gating;
+4.	Decisão de retrieval;
+5.	Retrieval determinístico ou híbrido;
+6.	Classificação de relevância (chunk grading);
+7.	Geração da resposta grounded;
+8.	Reflexão e autocorreção;
+9.	Resposta final ao utilizador.
+
+---
 
 ### 3. Preparação e indexação dos documentos
 
@@ -42,6 +46,8 @@ Fluxo de alto nível:
 
     Em vez de chunking arbitrário, o texto foi dividido por artigo, garantindo que cada node corresponde a uma unidade jurídica lógica.
     Assim, lookup por “Artigo Y.º” é possível e determinístico e, além disso, não se perde contexto normativo relevante.
+
+---
 
 ### 4. Estratégia de retrieval (um dos pontos mais críticos)
 
@@ -66,6 +72,7 @@ Fluxo de alto nível:
    *	Funde resultados de forma determinística;
    *	Sem dependência de OpenAI ou LLMs no retrieval.
 
+---
 
 ### 5. Domain Gate
 
@@ -76,6 +83,8 @@ Antes de qualquer retrieval, o sistema avalia se a pergunta é:
 
 Isto evita: Custos desnecessários, respostas jurídicas para perguntas irrelevantes e ruído no grafo
 
+---
+
 ### 6.  Decisão de uso de ferramentas (retrieval_decider)
 
 Um nó LLM decide:
@@ -84,6 +93,8 @@ Um nó LLM decide:
 *	Ou se precisa de chamar a tool de retrieval
 
 Este nó não responde juridicamente — apenas decide.
+
+---
 
 ### 7. Grade chunks (avaliação de aplicabilidade)
 
@@ -119,6 +130,8 @@ Para perguntas interpretativas:
 *	Com justificação;
 *	Mantém controlo fino sobre contexto usado.
 
+---
+
 ### 8. Geração da resposta (grounded)
 A geração é estritamente condicionada ao contexto selecionado.
 
@@ -133,6 +146,8 @@ Se a alínea não estiver visível o sistema declara explicitamente a limitaçã
     *	Apenas com base no contexto;
     * Se algo não constar -> o modelo deve dizê-lo explicitamente.
 
+---
+
 ### 9. Reflection (self-check jurídico)
 Antes da resposta final um nó de revisão jurídica valida se todas as afirmações estão suportadas pelo contexto se não estiverem a resposta é corrigida ou substituída por:
 
@@ -142,6 +157,8 @@ Este passo elimina:
 *	Over-reach do modelo;
 *	Inferências não sustentadas;
 *	Risco jurídico.
+
+---
 
 ### 10. Principais desafios enfrentados e resolvidos
 1. Chunking inadequado
@@ -173,5 +190,3 @@ Solução: hybrid retrieval manual, sem LLM.
 Problema: respostas “bem escritas”, mas não sustentadas.
 
 Solução: reflection node obrigatório, com contexto suportado nos documentos legais.
-
-
